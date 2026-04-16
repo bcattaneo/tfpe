@@ -1,0 +1,395 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #111827;
+  color: #e2e8f0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Upload screen ─────────────────────────────────────────── */
+
+.upload-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.upload-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  border: 2px dashed #374151;
+  border-radius: 16px;
+  padding: 64px 96px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: #1f2937;
+  text-align: center;
+}
+
+.upload-zone:hover,
+.upload-zone.dragging {
+  border-color: #6366f1;
+  background: #1e1b4b;
+}
+
+.upload-icon {
+  width: 56px;
+  height: 56px;
+  color: #6366f1;
+}
+
+.upload-zone h2 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.upload-zone p {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* ── Editor layout ─────────────────────────────────────────── */
+
+.editor-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ── Toolbar ───────────────────────────────────────────────── */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: #1f2937;
+  border-bottom: 1px solid #374151;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.tb-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tb-divider {
+  width: 1px;
+  height: 22px;
+  background: #374151;
+  margin: 0 6px;
+}
+
+.tb-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  background: #374151;
+  border: 1px solid #4b5563;
+  color: #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  line-height: 1;
+}
+
+.tb-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.tb-btn:hover {
+  background: #4b5563;
+  border-color: #6366f1;
+  color: #fff;
+}
+
+.tb-btn.active {
+  background: #6366f1;
+  border-color: #6366f1;
+  color: #fff;
+}
+
+.tb-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.tb-btn.bold {
+  font-style: normal;
+}
+
+.tb-btn.download {
+  background: #6366f1;
+  border-color: #6366f1;
+  color: #fff;
+  padding: 0 14px;
+}
+
+.tb-btn.download:hover:not(:disabled) {
+  background: #4f46e5;
+}
+
+.tb-font-size {
+  width: 52px;
+  height: 34px;
+  padding: 0 8px;
+  background: #374151;
+  border: 1px solid #4b5563;
+  color: #d1d5db;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.tb-color {
+  width: 34px;
+  height: 34px;
+  padding: 2px;
+  background: #374151;
+  border: 1px solid #4b5563;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.tb-label {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  padding: 0 2px;
+}
+
+/* ── Editor body ───────────────────────────────────────────── */
+
+.editor-body {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 20px;
+  gap: 18px;
+  background: #111827;
+}
+
+/* ── PDF canvas + overlay wrapper ─────────────────────────── */
+
+.canvas-wrapper {
+  position: relative;
+  display: inline-block;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+  border-radius: 2px;
+}
+
+.pdf-canvas {
+  display: block;
+}
+
+/* ── Overlay layer ─────────────────────────────────────────── */
+
+.overlay-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.overlay-layer.tool-text {
+  cursor: text;
+}
+
+.overlay-layer.tool-rect {
+  cursor: crosshair;
+}
+
+.overlay-layer.tool-editText {
+  cursor: text;
+}
+
+/* ── PDF text-item hit areas (editText mode) ───────────────── */
+
+.pdf-text-item {
+  cursor: text;
+  border-radius: 2px;
+  transition: background 0.1s, outline 0.1s;
+}
+
+.pdf-text-item:hover {
+  background: rgba(99, 102, 241, 0.18);
+  outline: 1px solid rgba(99, 102, 241, 0.55);
+}
+
+/* ── Overlay items ─────────────────────────────────────────── */
+
+.overlay-item {
+  position: absolute;
+  cursor: move;
+  user-select: none;
+}
+
+.overlay-item.text {
+  border: 1px dashed transparent;
+  border-radius: 2px;
+}
+
+.overlay-item.text:hover {
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+.overlay-item.text.selected {
+  border-color: #6366f1;
+}
+
+.overlay-item.image {
+  border: 1px dashed transparent;
+}
+
+.overlay-item.image:hover {
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+.overlay-item.image.selected {
+  border-color: #6366f1;
+}
+
+.overlay-item.rect {
+  border: 1px dashed transparent;
+}
+
+.overlay-item.rect:hover {
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+.overlay-item.rect.selected {
+  border-color: #6366f1;
+}
+
+.overlay-item.textEdit {
+  border: 1px dashed transparent;
+  border-radius: 2px;
+}
+
+.overlay-item.textEdit:hover {
+  border-color: rgba(34, 197, 94, 0.5);
+}
+
+.overlay-item.textEdit.selected {
+  border-color: #22c55e;
+}
+
+.text-display {
+  width: 100%;
+  height: 100%;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.4;
+  padding: 2px 4px;
+  pointer-events: none;
+}
+
+/* White background on textEdit overlays so they cover the original text */
+.textedit-bg {
+  background: white;
+}
+
+.placeholder {
+  color: rgba(99, 102, 241, 0.55);
+  font-style: italic;
+  font-size: 12px !important;
+  font-weight: normal !important;
+}
+
+.overlay-item textarea {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 28px;
+  background: rgba(255, 255, 255, 0.92);
+  border: none;
+  outline: none;
+  resize: none;
+  padding: 2px 4px;
+  line-height: 1.4;
+  font-family: inherit;
+}
+
+/* ── Delete button & resize handle ────────────────────────── */
+
+.item-delete-btn {
+  position: absolute;
+  top: -11px;
+  right: -11px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 0;
+}
+
+.item-delete-btn:hover {
+  background: #dc2626;
+}
+
+.resize-handle {
+  position: absolute;
+  bottom: -5px;
+  right: -5px;
+  width: 12px;
+  height: 12px;
+  background: #6366f1;
+  border-radius: 3px;
+  cursor: se-resize;
+  z-index: 10;
+}
+
+/* ── Page navigation ───────────────────────────────────────── */
+
+.page-nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.page-nav button {
+  background: #1f2937;
+  border: 1px solid #374151;
+  color: #d1d5db;
+  border-radius: 6px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.page-nav button:hover:not(:disabled) {
+  background: #374151;
+}
+
+.page-nav button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
